@@ -3,6 +3,7 @@ const TRAINERS_URL = `${BASE_URL}/trainers`
 const POKEMONS_URL = `${BASE_URL}/pokemons`
 const main = document.querySelector("main");
 
+document.addEventListener("DOMContentLoaded", (event) => {
 
 fetch(TRAINERS_URL)
 .then(resp => resp.json())
@@ -24,5 +25,32 @@ function putsTrainersOnPage(trainers){
     })
 }
 
+main.addEventListener("click", e => {
+    //debugger
+    if (e.target.dataset.trainerId !== undefined) {
+        fetch(POKEMONS_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                trainer_id: e.target.dataset.trainerId
+            })
+        })
+        .then(resp => resp.json())
+        .then(addPokemon)
+    }
+    if (e.target.dataset.pokemonId !== undefined) {
+        e.target.parentElement.remove()
+        fetch(POKEMONS_URL + "/" + e.target.dataset.pokemonId, {method :"DELETE"})
+    }
+})
 
+function addPokemon(pokemon) {
+    main.children[pokemon.trainer_id-1].lastElementChild.innerHTML +=
+    `<li>${pokemon.nickname} (${pokemon.species}) <button class="release"
+    data-pokemon-id="${pokemon.id}">Release</button></li>`
+}
+
+})
 
