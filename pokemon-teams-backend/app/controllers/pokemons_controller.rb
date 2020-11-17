@@ -2,7 +2,7 @@ class PokemonsController < ApplicationController
 
     def index
         pokemons = Pokemon.all
-        render json: pokemons
+        render json: pokemons, only: [:id, :nickname, :species, :trainer_id]
     end
 
     def show
@@ -17,13 +17,17 @@ class PokemonsController < ApplicationController
     end
 
     def new
-        pokemon = Pokemon.new
+
     end
 
     def create
         name = Faker::Name.first_name
         species = Faker::Games::Pokemon.name
-        Pokemon.create(nickname: name, species: species, trainer_id: params[:trainer_id])
+        trainer = Trainer.find_by(id: params[:trainer_id])
+        if trainer.pokemons.length < 6
+        pokemon = Pokemon.create(nickname: name, species: species, trainer_id: params[:trainer_id])
+        render json: pokemon
+        end
     end
 
 end

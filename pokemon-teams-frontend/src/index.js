@@ -29,27 +29,28 @@ function renderTrainer(trainer) {
     const addButton = document.createElement('button')
     addButton.innerText = `Add Pokemon`
     addButton.addEventListener("click", function(event) {
-       // if (trainer.pokemons < 6) {
            
             let Obj = {
                 method: "POST",
-                    headers: {
+                headers: {
                       "Content-Type": "application/json",
                       "Accept": "application/json"
-                    },
-                    body: JSON.stringify({"trainer_id": trainer.id})
+                },
+                body: JSON.stringify({"trainer_id": trainer.id})
                 };
             fetch("http://localhost:3000/pokemons", Obj)
-            .then(function(response) {
-                return response.json();
-            })
+             .then(function(response) {
+                 return response.json();
+             })
             .then(function(object) {
                 let newPokemon = renderPokemon(object)
                 list.appendChild(newPokemon)
-                });
-
-
-         // }
+              })
+            .catch(function(error) {
+              alert("This team is full!");
+              console.log(error.message);
+            });
+          
         })
     newDiv.appendChild(addButton)
     
